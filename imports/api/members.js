@@ -6,7 +6,7 @@ export const Members = new Mongo.Collection('members');
 
 if (Meteor.isServer) {
   Meteor.publish('members', function membersPublication() {
-    return Members.find({});
+    return Members.find({}, {sort: {name: 1}});
   });
 }
 

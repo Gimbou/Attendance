@@ -29,9 +29,9 @@ Meteor.methods({
 
     if(currentEvent) {
       if(currentEvent.members && currentEvent.members.find((element) => { return element.memberId == memberId })) {
-        Events.update({_id: currentEvent._id, "members.memberId": memberId}, { $set: { "members.$.status": status, "members.$.info": info } });
+        Events.update({_id: currentEvent._id, "members.memberId": memberId}, { $set: { "members.$.status": status, "members.$.info": info, "members.$.modifiedAt": new Date() } });
       } else {
-        var member = {memberId: memberId, status: status, info: info};
+        var member = {memberId: memberId, status: status, info: info, createdAt: new Date()};
 
         Events.update({_id: currentEvent._id}, { $push: { members: member } });
       }
