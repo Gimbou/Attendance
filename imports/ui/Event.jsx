@@ -21,7 +21,7 @@ export default class Event extends Component {
     return (
       <div className="event">
         <div>
-          <span className="date">{date}</span><span className="countdown">({toDate})</span>
+          <span className="date">{date}</span> <span className="countdown">({toDate})</span>
         </div>
         <div className="extraInfo">Bommari kenttä 1</div>
       </div>
