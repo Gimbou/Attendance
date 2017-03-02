@@ -77,7 +77,7 @@ class App extends Component {
             <div className="loginHeader">Sählyvuoro</div>
             <form className="loginForm" onSubmit={this.handleLogin} >
               <FormControl
-                type="text"
+                type="password"
                 placeholder="Salasana"
                 value={this.state.value}
                 onChange={this.handleChange}

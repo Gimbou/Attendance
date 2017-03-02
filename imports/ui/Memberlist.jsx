@@ -8,7 +8,7 @@ import { Members } from '../api/members.js';
 class Memberlist extends Component {
 	constructor(props) {
     super(props);
-    this.state = {target: null, value: '', oldValue: ''};
+    this.state = {target: null, value: '', oldValue: '', member: ''};
 
     this.handleFocus = this.handleFocus.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -21,11 +21,11 @@ class Memberlist extends Component {
   		this.state.target.value = this.state.oldValue;
   	}
 
-    this.setState({target: event.target, value: event.target.value, oldValue: event.target.value});
+    this.setState({target: event.target, value: event.target.value, oldValue: event.target.value, member: event.currentTarget.parentNode.id});
   }
 
   handleChange(event) {
-    this.setState({target: event.target, value: event.target.value});
+    this.setState({target: event.target, value: event.target.value, member: event.currentTarget.parentNode.id});
   }
 
 	isMemberInEvent(memberId) {
@@ -37,11 +37,19 @@ class Memberlist extends Component {
 
 		var memberId = event.currentTarget.parentNode.id;
 		var status = event.currentTarget.value;
-		var info = this.state.value.trim();
+		var info = '';
+
+		if(this.state.member && this.state.value && this.state.target) {		
+			if(memberId == this.state.member) {
+				info = this.state.value.trim();
+			} else {
+				this.state.target.value = this.state.oldValue;
+			}
+		}
 
 		Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
 
-		this.setState({target: null, value: '', oldValue: ''});
+		this.setState({target: null, value: '', oldValue: '', member: ''});
 	}
 
 	handleMemberRemoveFromEvent(event) {
@@ -51,7 +59,7 @@ class Memberlist extends Component {
 
 		Meteor.call('currentEvent.removeMember', memberId);
 
-		this.setState({target: null, value: '', oldValue: ''});
+		this.setState({target: null, value: '', oldValue: '', member: ''});
 	}
 
 	renderMembers() {
@@ -72,7 +80,7 @@ class Memberlist extends Component {
 				        	{isMemberInEvent && <Button type="button" key="{member._id}REMOVE" onClick={this.handleMemberRemoveFromEvent}><Glyphicon glyph="remove" /></Button>}
 			        	</ButtonGroup>
 		        	</span>
-		        	<span key="info">
+		        	<span key="info" className="info" id={member._id}>
 			        	<FormControl
 				          type="text"
 				          placeholder="Viesti"
