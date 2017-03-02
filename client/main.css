@@ -1,0 +1,171 @@
+/* CSS declarations go here */
+body {
+  font-family: sans-serif;
+  background-color: #262626;
+  background-image: linear-gradient(to bottom, #262626, #918e82 100%);
+  background-attachment: fixed;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 0;
+  margin: 0;
+
+  font-size: 14px;
+}
+
+#render-target {
+  height: 100%;
+}
+
+.page-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0;
+  height: 100%;
+  background: white;
+}
+
+.content-container {
+  padding: 0;
+  margin: 0;
+  background: white;
+}
+
+.weWillPlay {
+  padding: 20px 15px 20px 15px;
+  font-size: 18px;
+}
+
+.weWillPlayGreen {
+  background-color: #5cb85c;
+}
+
+.weWillPlayRed {
+  background-color: #d9534f;
+}
+
+
+.comingList {
+  padding: 20px 0px 20px 0px;
+  background-color: #e6ffe6;
+}
+
+.comingListHeader {
+  padding: 0px 15px 10px 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.maybeList {
+  padding: 20px 0px 20px 0px;
+  background-color: #ffffe6;
+}
+
+.maybeListHeader {
+  padding: 0px 15px 10px 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.noList {
+  padding: 20px 0px 20px 0px;
+  background-color: #ffe6e6;
+}
+
+.noListHeader {
+  padding: 0px 15px 10px 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.membersHeader {
+  padding: 20px 15px 0px 15px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.memberList {
+  padding: 20px 0px 20px 0px;
+}
+
+.event {
+  padding: 20px 15px 20px 15px;
+}
+
+.event .date {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.event .countdown {
+  padding-left: 10px;
+  font-size: 14px;
+}
+
+.event .extraInfo {
+  font-size: 18px;
+}
+
+.memberContainer {
+  padding: 0px 15px 0px 15px;
+}
+
+.member {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  margin: 5px 0px 5px 0px;
+  width: 100%;
+}
+
+.memberName {
+  font-size: 16px;
+  font-weight: bold;
+  width: 100px;
+}
+
+.buttons {
+  width: 160px;
+}
+
+.info {
+  margin: auto;
+}
+
+.info .form-control {
+  margin: auto;
+}
+
+.login {
+  padding-top: 20px;
+}
+
+.loginHeader {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+
+.login .form-control {
+  width: 150px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.addMemberContainer {
+  padding: 20px 25px 0px 25px;
+  max-width: 200px;
+}
