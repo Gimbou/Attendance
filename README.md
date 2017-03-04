@@ -6,9 +6,9 @@ Simple registration application for events repeating weekly.
 
     git clone https://github.com/Gimbou/Ilmoittautuminen.git
     cd Ilmoittautuminen
-    modify settings.json
+    modify settings_dev.json
     meteor npm install
-    meteor --settings settings.json
+    meteor --settings settings_dev.json
 
 ## Settings
 
