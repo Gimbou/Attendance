@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { check } from 'meteor/check';
-import { nextDay, nextEvent } from '../helpers/date.js';
+import { nextEvent } from '../helpers/date.js';
 
 export const Events = new Mongo.Collection('events');
 
@@ -17,15 +17,21 @@ Meteor.methods({
     check(status, String);
     check(info, String);
 
-    if(info.length > 50) {
-      throw new Meteor.Error('too long');
-    }
-
     if(!this.userId) {
       throw new Meteor.Error('not-authorized');
     }
 
-    var currentEvent = Events.findOne({date: nextEvent()});
+    var nextEventDate = nextEvent();
+
+    if(Meteor.settings.public.lockdown && new Date().valueOf() > (nextEventDate.valueOf() - (Meteor.settings.public.lockdown * 60000))) {
+      throw new Meteor.Error('too late');
+    }
+
+    if(info.length > 50) {
+      throw new Meteor.Error('too long');
+    }
+
+    var currentEvent = Events.findOne({date: nextEventDate});
 
     if(currentEvent) {
       if(currentEvent.members && currentEvent.members.find((element) => { return element.memberId == memberId })) {
@@ -44,7 +50,13 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    var currentEvent = Events.findOne({date: nextEvent()});
+    var nextEventDate = nextEvent();
+
+    if(Meteor.settings.public.lockdown && new Date().valueOf() > (nextEventDate.valueOf() - (Meteor.settings.public.lockdown * 60000))) {
+      throw new Meteor.Error('too late');
+    }
+
+    var currentEvent = Events.findOne({date: nextEventDate});
     if(currentEvent) {
       Events.update({_id: currentEvent._id}, { $pull: { members: { memberId: memberId } } });
     }

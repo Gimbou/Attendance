@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { underscore } from 'underscore';
-import { FormControl } from 'react-bootstrap';
+import { Button, FormGroup, InputGroup, FormControl, Glyphicon } from 'react-bootstrap';
 
 import Event from './Event.jsx';
 import MemberlistContainer from './Memberlist.jsx';
@@ -33,21 +33,60 @@ class App extends Component {
     this.setState({value: ''});
   }
 
+  handleLogout(event) {
+    event.preventDefault();
+
+    Meteor.logout();
+  }
+
   render() {
+    document.title = Meteor.settings.public.title;
+    var title = Meteor.settings.public.title;
+
     var currentEvent = this.props.currentEvent;
 
-    var count = currentEvent ? _.countBy(currentEvent.members, (member) => {return member.status == 'YES' ? 'yes' : member.status == 'MAYBE' ? 'maybe' : member.status == 'NO' ? 'no' : 0}) : 0;
-    var playersNeeded = count.yes ? 6 - count.yes : 6;
-    var weWillPlay = count.yes >= 6 ? 'PELIT ON! Olkaa ajoissa paikalla.' : playersNeeded > 1 ? 'Tarvitaan vielä ' + playersNeeded + ' pelaajaa' : 'Tarvitaan vielä ' + playersNeeded + ' pelaaja';
-    var weWillPlayColor = count.yes >= 6 ? 'weWillPlay weWillPlayGreen' : playersNeeded > 1 ? 'weWillPlay weWillPlayRed' : 'weWillPlay weWillPlayRed';
+    var signingDisabled = false;
+    var count = 0;
+    var playersNeeded = 0;
+    var weWillPlay = '';
+    var weWillPlayColor = '';
+    
+    if(currentEvent) {
+      if(Meteor.settings.public.lockdown && new Date().valueOf() > (currentEvent.date.valueOf() - (Meteor.settings.public.lockdown * 60000))) {
+        signingDisabled = true;
+      }
+
+      count = _.countBy(currentEvent.members, (member) => {return member.status == 'YES' ? 'yes' : member.status == 'MAYBE' ? 'maybe' : member.status == 'NO' ? 'no' : 0});
+      
+      if(Meteor.settings.public.playerCount) {
+        playersNeeded = count.yes ? Meteor.settings.public.playerCount - count.yes : Meteor.settings.public.playerCount;
+
+        if(count.yes >= Meteor.settings.public.playerCount) {
+          weWillPlay = 'PELIT ON! Olkaa ajoissa paikalla.';
+          weWillPlayColor = 'weWillPlay weWillPlayGreen';
+        } else if(signingDisabled) {
+          weWillPlay = 'Ilmoittautuminen on loppunut, tänään EI OLE pelejä :( Olisi tarvittu vielä ' + playersNeeded + ' pelaajaa...';
+          weWillPlayColor = 'weWillPlay weWillPlayRed';
+        } else if(playersNeeded > 1) {
+          weWillPlay = 'Tarvitaan vielä ' + playersNeeded + ' pelaajaa';
+          weWillPlayColor = 'weWillPlay weWillPlayRed';
+        } else {
+          weWillPlay = 'Tarvitaan vielä ' + playersNeeded + ' pelaaja';
+          weWillPlayColor = 'weWillPlay weWillPlayRed';
+        }
+      }
+    }
 
     return (
       <div className="page-container">
         {this.props.currentUser ?
           <div className="content-container">
+            <div className="logoutButtonContainer">
+              <Button key="logout" className="logoutButton" onClick={this.handleLogout}><Glyphicon glyph="log-out" /></Button>
+            </div>
             <header>
               <Event currentEvent={currentEvent} />
-              <div className={weWillPlayColor}>{weWillPlay}</div>
+              {Meteor.settings.public.playerCount && <div className={weWillPlayColor}>{weWillPlay}</div>}
             </header>
             {count.yes > 0 &&
               <div className="comingList">
@@ -74,15 +113,24 @@ class App extends Component {
             </div>
           </div> : 
           <div className="login">
-            <div className="loginHeader">Sählyvuoro</div>
-            <form className="loginForm" onSubmit={this.handleLogin} >
-              <FormControl
-                type="password"
-                placeholder="Salasana"
-                value={this.state.value}
-                onChange={this.handleChange}
-              />
-            </form>
+            <div className="loginHeader">{title}</div>
+            <div className="loginFormContainer">
+              <form className="loginForm" onSubmit={this.handleLogin} >
+                <FormGroup>
+                  <InputGroup>
+                    <FormControl
+                      type="password"
+                      placeholder="Salasana"
+                      value={this.state.value}
+                      onChange={this.handleChange}
+                    />
+                    <InputGroup.Button>
+                      <Button type="submit">Kirjaudu</Button>
+                    </InputGroup.Button>
+                  </InputGroup>
+                </FormGroup>
+              </form>
+            </div>
           </div>
         }
       </div>

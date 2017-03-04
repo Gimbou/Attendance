@@ -8,20 +8,37 @@ import { Members } from '../api/members.js';
 class Memberlist extends Component {
 	constructor(props) {
     super(props);
-    this.state = {target: null, value: '', oldValue: '', member: ''};
+    this.state = {target: null, value: '', member: ''};
 
     this.handleFocus = this.handleFocus.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleMemberStatusChange = this.handleMemberStatusChange.bind(this);
     this.handleMemberRemoveFromEvent = this.handleMemberRemoveFromEvent.bind(this);
   }
 
   handleFocus(event) {
-  	if(this.state.target && this.state.target != event.target) {
-  		this.state.target.value = this.state.oldValue;
+  	var isMemberInEvent = this.isMemberInEvent(event.currentTarget.parentNode.id);
+
+  	if(!isMemberInEvent && this.state.target && event.target != this.state.target) {
+  		this.state.target.value = '';
   	}
 
-    this.setState({target: event.target, value: event.target.value, oldValue: event.target.value, member: event.currentTarget.parentNode.id});
+  	event.target.className = 'form-control';
+  }
+
+  handleBlur(event) {
+  	var isMemberInEvent = this.isMemberInEvent(event.currentTarget.parentNode.id);
+  	
+  	if(isMemberInEvent) {
+  		event.target.className = 'plainInput form-control';
+
+	  	var memberId = isMemberInEvent.memberId;
+			var status = isMemberInEvent.status;
+			var info = this.state.value.trim();
+
+			Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
+		}
   }
 
   handleChange(event) {
@@ -39,17 +56,15 @@ class Memberlist extends Component {
 		var status = event.currentTarget.value;
 		var info = '';
 
-		if(this.state.member && this.state.value && this.state.target) {		
-			if(memberId == this.state.member) {
-				info = this.state.value.trim();
-			} else {
-				this.state.target.value = this.state.oldValue;
-			}
+		var isMemberInEvent = this.isMemberInEvent(memberId);
+
+		if(!isMemberInEvent && this.state.member && this.state.value && memberId == this.state.member) {		
+			info = this.state.value.trim();
+		} else if(isMemberInEvent) {
+			info = isMemberInEvent.info;
 		}
 
 		Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
-
-		this.setState({target: null, value: '', oldValue: '', member: ''});
 	}
 
 	handleMemberRemoveFromEvent(event) {
@@ -58,15 +73,22 @@ class Memberlist extends Component {
 		var memberId = event.currentTarget.parentNode.id;
 
 		Meteor.call('currentEvent.removeMember', memberId);
-
-		this.setState({target: null, value: '', oldValue: '', member: ''});
 	}
 
 	renderMembers() {
-		const { status } = this.props;
+		const { status, currentEvent } = this.props;
+		
+		var signingDisabled = false;
+
+		if(Meteor.settings.public.lockdown && currentEvent && new Date().valueOf() > (currentEvent.date.valueOf() - (Meteor.settings.public.lockdown * 60000))) {
+      signingDisabled = true;
+    }
+
 		return this.props.members.map((member) => {
 			var isMemberInEvent = this.isMemberInEvent(member._id);
 			var memberInfo = isMemberInEvent ? isMemberInEvent.info : '';
+			var inputStyle = isMemberInEvent ? 'plainInput' : '';
+
 			if((!status && !isMemberInEvent) || (isMemberInEvent && status == isMemberInEvent.status)) {	
 	      return (
 	      	<div key={member._id} className="memberContainer">
@@ -74,20 +96,22 @@ class Memberlist extends Component {
 		        	<span key="name" className="memberName">{member.name}</span>
 		        	<span key="buttons" className="buttons">
 			        	<ButtonGroup key="ButtonGroup{member._id}" id={member._id} ref={member._id}>
-				        	<Button bsStyle="success" key="YES" value="YES" onClick={this.handleMemberStatusChange}><Glyphicon glyph="thumbs-up" /></Button>
-				        	<Button bsStyle="warning" key="MAYBE" value="MAYBE" onClick={this.handleMemberStatusChange}><Glyphicon glyph="question-sign" /></Button>
-				        	<Button bsStyle="danger" key="NO" value="NO" onClick={this.handleMemberStatusChange}><Glyphicon glyph="thumbs-down" /></Button>
-				        	{isMemberInEvent && <Button type="button" key="{member._id}REMOVE" onClick={this.handleMemberRemoveFromEvent}><Glyphicon glyph="remove" /></Button>}
+				        	<Button bsStyle="success" key="YES" value="YES" onClick={this.handleMemberStatusChange} disabled={signingDisabled}><Glyphicon glyph="thumbs-up" /></Button>
+				        	<Button bsStyle="warning" key="MAYBE" value="MAYBE" onClick={this.handleMemberStatusChange} disabled={signingDisabled}><Glyphicon glyph="question-sign" /></Button>
+				        	<Button bsStyle="danger" key="NO" value="NO" onClick={this.handleMemberStatusChange} disabled={signingDisabled}><Glyphicon glyph="thumbs-down" /></Button>
+				        	{isMemberInEvent && <Button type="button" key="{member._id}REMOVE" onClick={this.handleMemberRemoveFromEvent} disabled={signingDisabled}><Glyphicon glyph="remove" /></Button>}
 			        	</ButtonGroup>
 		        	</span>
 		        	<span key="info" className="info" id={member._id}>
-			        	<FormControl
+			        	<FormControl className={inputStyle}
 				          type="text"
 				          placeholder="Viesti"
 				          defaultValue={memberInfo}
 				          onFocus={this.handleFocus}
+				          onBlur={this.handleBlur}
 				          onChange={this.handleChange}
 				          maxLength="50"
+				          disabled={signingDisabled}
 			        	/>
 		        	</span>
 		        </div>
@@ -116,6 +140,6 @@ export default MemberlistContainer = createContainer(() => {
   Meteor.subscribe('members');
 
   return {
-    members: Members.find({}).fetch()
+    members: Members.find({}, {sort: {name: 1}}).fetch()
   };
 }, Memberlist);

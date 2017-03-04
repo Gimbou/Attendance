@@ -9,21 +9,23 @@ moment.locale('fi');
 export default class Event extends Component {
   render() {
     const { currentEvent } = this.props;
+    
     var date;
     var toDate;
+    var place = Meteor.settings.public.place;
 
     if(currentEvent) {
       date = moment(currentEvent.date).format("dddd DD.MM.YYYY [klo] HH:mm");
       date = date.charAt(0).toUpperCase() + date.slice(1);
       toDate = moment(currentEvent.date).fromNow();
+      toDate = toDate.charAt(0).toUpperCase() + toDate.slice(1);
     }
 
     return (
       <div className="event">
-        <div>
-          <span className="date">{date}</span> <span className="countdown">({toDate})</span>
-        </div>
-        <div className="extraInfo">Bommari kenttä 1</div>
+        <div className="date">{date}</div>
+        <div className="countdown">{toDate}</div>
+        <div className="extraInfo">{place}</div>
       </div>
     );
   }

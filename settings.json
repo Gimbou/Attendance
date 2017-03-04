@@ -1,0 +1,11 @@
+{
+  "public": {
+      "title": "Sählyvuoro",
+      "place": "Bommari 1",
+      "weekday": 4,
+      "time": 20,
+      "lockdown": 60,
+      "playerCount": 6
+  },
+  "password": "???"
+}

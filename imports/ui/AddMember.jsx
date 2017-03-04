@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
-import { FormControl } from 'react-bootstrap';
+import { Button, FormGroup, InputGroup, FormControl } from 'react-bootstrap';
 
 import { Members } from '../api/members.js';
 
@@ -33,15 +33,22 @@ export default class addMember extends Component {
   render() {
     return (
      	<div className="addMemberContainer">
-	     	<form className="addMember" onSubmit={this.handleAddMember} >
-	        <FormControl
-	          type="text"
-	          placeholder="Uusi pelaaja"
-            value={this.state.value}
-            onChange={this.handleChange}
-            maxLength="10"
-	        />
-	       </form>
+        <form className="addMember" onSubmit={this.handleAddMember}>
+  	     	<FormGroup>
+  	        <InputGroup>
+              <FormControl
+    	          type="text"
+    	          placeholder="Uusi pelaaja"
+                value={this.state.value}
+                onChange={this.handleChange}
+                maxLength="10"
+    	        />
+              <InputGroup.Button>
+                <Button type="submit">Lisää</Button>
+              </InputGroup.Button>
+            </InputGroup>
+  	      </FormGroup>
+        </form>
       </div>
     );
   }
