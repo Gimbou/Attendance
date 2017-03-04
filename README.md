@@ -18,5 +18,4 @@ Simple registration application for events repeating weekly.
 - **Time**: Starting hours of the event
 - **Lockdown**: Last change to sign up in minutes
 - **Playercount**: How many players are needed for the event to happen
-
 - **Password**: Login password
