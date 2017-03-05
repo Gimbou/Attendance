@@ -6,7 +6,9 @@ Simple attendance application for events repeating weekly.
 
     git clone https://github.com/Gimbou/Attendance.git
     cd Attendance
-    modify settings_dev.json
+
+    (modify settings_dev.json before running the application)
+    
     meteor npm install
     meteor --settings settings_dev.json
 
