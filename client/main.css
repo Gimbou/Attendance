@@ -122,29 +122,32 @@ body {
 .member {
   display: -webkit-flex;
   display: flex;
-  -webkit-flex-wrap: wrap;
-  flex-wrap: wrap;
   -webkit-justify-content: space-between;
   justify-content: space-between;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
   -webkit-align-items: center;
   align-items: center;
   width: 100%;
 }
 
 .memberName {
+  width: 140px;
   font-size: 16px;
   font-weight: bold;
-  width: 100px;
   margin-bottom: 5px;
 }
 
 .buttons {
-  width: 160px;
   margin-bottom: 5px;
 }
 
+.info {
+  margin-left: 5px;
+  flex-grow: 1;
+}
+
 .info .form-control {
-  width: 300px;
   margin-bottom: 5px;
 }
 
@@ -196,19 +199,4 @@ body {
 .addMemberContainer .input-group {
   display: -webkit-flex;
   display: flex;
-}
-
-@media (max-width: 606px) {
-  .member {
-    -webkit-justify-content: flex-start;
-    justify-content: flex-start;
-  }
-
-  .memberName {
-    width: 143px;
-  }
-
-  .info .form-control {
-    margin-bottom: 20px;
-  }
 }
