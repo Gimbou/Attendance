@@ -1,5 +1,5 @@
 {
-  "name": "Ilmoittautuminen",
+  "name": "Attendance",
   "private": true,
   "scripts": {
     "start": "meteor run"
