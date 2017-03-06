@@ -119,6 +119,7 @@ class App extends Component {
                 <FormGroup>
                   <InputGroup>
                     <FormControl
+                      autoFocus
                       type="password"
                       placeholder="Salasana"
                       value={this.state.value}
