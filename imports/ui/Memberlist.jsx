@@ -35,7 +35,7 @@ class Memberlist extends Component {
 
 	  	var memberId = isMemberInEvent.memberId;
 			var status = isMemberInEvent.status;
-			var info = this.state.value.trim();
+			var info = event.target.value.trim();
 
 			Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
 		}
