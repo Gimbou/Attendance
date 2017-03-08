@@ -212,4 +212,17 @@ body {
     margin-top: 0px;
     margin-bottom: 0px;
   }
+
+  body {
+    height: 100%;
+  }
+
+  #render-target {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
+  .page-container {
+    min-height: 100%;
+  }
 }
