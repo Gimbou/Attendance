@@ -8,7 +8,7 @@ import { Members } from '../api/members.js';
 class Memberlist extends Component {
 	constructor(props) {
     super(props);
-    this.state = {target: null, value: '', member: ''};
+    this.state = {target: null, value: '', member: '', memberInfo: ''};
 
     this.handleFocus = this.handleFocus.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
@@ -22,6 +22,7 @@ class Memberlist extends Component {
 
   	if(!isMemberInEvent && this.state.target && event.target != this.state.target) {
   		this.state.target.value = '';
+  		this.setState({memberInfo: ''});
   	}
 
   	event.target.className = 'form-control';
@@ -38,11 +39,13 @@ class Memberlist extends Component {
 			var info = event.target.value.trim();
 
 			Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
+
+			this.setState({memberInfo: ''});
 		}
   }
 
   handleChange(event) {
-    this.setState({target: event.target, value: event.target.value, member: event.currentTarget.parentNode.id});
+    this.setState({target: event.target, value: event.target.value, member: event.currentTarget.parentNode.id, memberInfo: event.target.value});
   }
 
 	isMemberInEvent(memberId) {
@@ -65,6 +68,8 @@ class Memberlist extends Component {
 		}
 
 		Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
+
+		this.setState({memberInfo: ''});
 	}
 
 	handleMemberRemoveFromEvent(event) {
@@ -73,6 +78,8 @@ class Memberlist extends Component {
 		var memberId = event.currentTarget.parentNode.id;
 
 		Meteor.call('currentEvent.removeMember', memberId);
+
+		this.setState({memberInfo: ''});
 	}
 
 	renderMembers() {
@@ -86,7 +93,7 @@ class Memberlist extends Component {
 
 		return this.props.members.map((member) => {
 			var isMemberInEvent = this.isMemberInEvent(member._id);
-			var memberInfo = isMemberInEvent ? isMemberInEvent.info : '';
+			var memberInfo = this.state.memberInfo && this.state.member == member._id ? this.state.memberInfo : isMemberInEvent ?  isMemberInEvent.info : '';
 			var inputStyle = isMemberInEvent ? 'plainInput' : '';
 
 			if((!status && !isMemberInEvent) || (isMemberInEvent && status == isMemberInEvent.status)) {	
@@ -106,7 +113,7 @@ class Memberlist extends Component {
 			        	<FormControl className={inputStyle}
 				          type="text"
 				          placeholder="Viesti"
-				          defaultValue={memberInfo}
+				          value={memberInfo}
 				          onFocus={this.handleFocus}
 				          onBlur={this.handleBlur}
 				          onChange={this.handleChange}
