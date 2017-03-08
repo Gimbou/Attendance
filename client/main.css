@@ -1,8 +1,9 @@
-html, body {
+html {
   height: 100%;
 }
 
 body {
+  min-height: 100%;
   font-family: sans-serif;
   background-color: #ffd699;
   background-image: linear-gradient(to top, #accbee 0%, #e7f0fd 100%);
@@ -14,10 +15,13 @@ body {
 
 #render-target {
   height: 100%;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .page-container {
   max-width: 800px;
+  height: 100%;
   margin: 0 auto;
   padding: 0;
   background: white;
@@ -201,4 +205,11 @@ body {
 .addMemberContainer .input-group {
   display: -webkit-flex;
   display: flex;
+}
+
+@media (max-width: 800px) {
+  #render-target {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
 }
