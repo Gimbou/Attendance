@@ -106,6 +106,7 @@ class Memberlist extends Component {
 			        	<FormControl className={inputStyle}
 				          type="text"
 				          placeholder="Viesti"
+				          value={memberInfo}
 				          defaultValue={memberInfo}
 				          onFocus={this.handleFocus}
 				          onBlur={this.handleBlur}
