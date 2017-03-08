@@ -40,7 +40,7 @@ class Memberlist extends Component {
 
 			Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
 
-			this.setState({memberInfo: ''});
+			this.setState({member: '', memberInfo: ''});
 		}
   }
 
@@ -69,7 +69,7 @@ class Memberlist extends Component {
 
 		Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
 
-		this.setState({memberInfo: ''});
+		this.setState({member: '', memberInfo: ''});
 	}
 
 	handleMemberRemoveFromEvent(event) {
@@ -79,7 +79,7 @@ class Memberlist extends Component {
 
 		Meteor.call('currentEvent.removeMember', memberId);
 
-		this.setState({memberInfo: ''});
+		this.setState({member: '', memberInfo: ''});
 	}
 
 	renderMembers() {
@@ -94,6 +94,7 @@ class Memberlist extends Component {
 		return this.props.members.map((member) => {
 			var isMemberInEvent = this.isMemberInEvent(member._id);
 			var memberInfo = this.state.memberInfo && this.state.member == member._id ? this.state.memberInfo : isMemberInEvent ?  isMemberInEvent.info : '';
+			memberInfo = !this.state.memberInfo && this.state.member == member._id ? '' : memberInfo;
 			var inputStyle = isMemberInEvent ? 'plainInput' : '';
 
 			if((!status && !isMemberInEvent) || (isMemberInEvent && status == isMemberInEvent.status)) {	

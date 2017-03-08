@@ -135,6 +135,7 @@ body {
   -webkit-align-items: center;
   align-items: center;
   width: 100%;
+  padding-left: 10px;
 }
 
 .memberName {
@@ -195,7 +196,7 @@ body {
 }
 
 .addMemberContainer {
-  padding: 20px 15px 0px 15px;
+  padding: 20px 15px 0px 25px;
 }
 
 .addMemberContainer .form-control {
