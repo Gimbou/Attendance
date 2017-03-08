@@ -208,11 +208,6 @@ body {
 }
 
 @media (max-width: 800px) {
-  #render-target {
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-
   body {
     height: 100%;
   }
