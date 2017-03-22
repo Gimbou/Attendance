@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { underscore } from 'underscore';
 import { Button, FormGroup, InputGroup, FormControl, Glyphicon } from 'react-bootstrap';
+import getParameter from 'get-parameter';
 
 import Event from './Event.jsx';
 import MemberlistContainer from './Memberlist.jsx';
@@ -17,6 +18,14 @@ class App extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  componentWillMount() {
+    var password = getParameter('pw');
+
+    if(password) {
+      Meteor.loginWithPassword('user', password);
+    }
   }
 
   handleChange(event) {
