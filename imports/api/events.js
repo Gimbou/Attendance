@@ -21,6 +21,10 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    if(!status || (status !== "YES" && status !== "MAYBE" && status !== "NO")) {
+      throw new Meteor.Error('invalid status');
+    }
+
     var nextEventDate = nextEvent();
 
     if(Meteor.settings.public.lockdown && new Date().valueOf() > (nextEventDate.valueOf() - (Meteor.settings.public.lockdown * 60000))) {
