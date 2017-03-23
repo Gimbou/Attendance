@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Button, ButtonGroup, FormControl, Glyphicon } from 'react-bootstrap';
+import { sweetAlert } from 'sweetalert';
+import 'sweetalert/dist/sweetalert.css';
 
 import { Members } from '../api/members.js';
 
@@ -59,27 +61,78 @@ class Memberlist extends Component {
 		var status = event.currentTarget.value;
 		var info = '';
 
-		var isMemberInEvent = this.isMemberInEvent(memberId);
+		var name = Members.findOne({_id: memberId}).name;
 
-		if(!isMemberInEvent && this.state.member && this.state.value && memberId == this.state.member) {		
-			info = this.state.value.trim();
-		} else if(isMemberInEvent) {
-			info = isMemberInEvent.info;
+		var title = '';
+		var confirmButtonColor = '';
+
+		if(status == 'YES') {
+			title = "Lisätäänkö pelaaja <font color=\"#5cb85c\">" + name + "</font> tilaan \"<font color=\"#5cb85c\">Tulossa</font>\"?";
+			confirmButtonColor = '#5cb85c';
+		} else if(status == 'MAYBE') {
+			title = "Lisätäänkö pelaaja <font color=\"#f0ad4e\">" + name + "</font> tilaan \"<font color=\"#f0ad4e\">Ehkä</font>\"?";
+			confirmButtonColor = '#f0ad4e';
+		} else if(status == 'NO') {
+			title = "Lisätäänkö pelaaja <font color=\"#d9534f\">" + name + "</font> tilaan \"<font color=\"#d9534f\">Ei</font>\"?";
+			confirmButtonColor = '#d9534f';
 		}
 
-		Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
+		swal({
+		  title: title,
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: confirmButtonColor,
+		  confirmButtonText: "Kyllä",
+		  cancelButtonText: "Ei",
+		  closeOnConfirm: true,
+		  closeOnCancel: true,
+		  allowEscapeKey: true,
+		  allowOutsideClick: true,
+		  html: true
+		},
+		function(isConfirm){
+		  if (isConfirm) {
+				var isMemberInEvent = this.isMemberInEvent(memberId);
 
-		this.setState({member: '', memberInfo: ''});
+				if(!isMemberInEvent && this.state.member && this.state.value && memberId == this.state.member) {		
+					info = this.state.value.trim();
+				} else if(isMemberInEvent) {
+					info = isMemberInEvent.info;
+				}
+
+				Meteor.call('currentEvent.setMemberStatus', memberId, status, info);
+
+				this.setState({member: '', memberInfo: ''});
+		  }
+		}.bind(this));
 	}
 
 	handleMemberRemoveFromEvent(event) {
 		event.preventDefault();
 
 		var memberId = event.currentTarget.parentNode.id;
+		var name = Members.findOne({_id: memberId}).name;
+		var title = "Poistetaanko pelaajan <b>" + name + "</b> ilmoittautumistilanne kokonaan?";
 
-		Meteor.call('currentEvent.removeMember', memberId);
+		swal({
+		  title: title,
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonText: "Kyllä",
+		  cancelButtonText: "Ei",
+		  closeOnConfirm: true,
+		  closeOnCancel: true,
+		  allowEscapeKey: true,
+		  allowOutsideClick: true,
+		  html: true
+		},
+		function(isConfirm){
+		  if (isConfirm) {
+				Meteor.call('currentEvent.removeMember', memberId);
 
-		this.setState({member: '', memberInfo: ''});
+				this.setState({member: '', memberInfo: ''});
+		  }
+		}.bind(this));
 	}
 
 	renderMembers() {
