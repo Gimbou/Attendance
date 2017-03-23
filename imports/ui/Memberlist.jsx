@@ -112,7 +112,7 @@ class Memberlist extends Component {
 
 		var memberId = event.currentTarget.parentNode.id;
 		var name = Members.findOne({_id: memberId}).name;
-		var title = "Poistetaanko pelaajan <b>" + name + "</b> ilmoittautumistilanne kokonaan?";
+		var title = "Poistetaanko pelaajan <font color=\"#AEDEF4\">" + name + "</font> ilmoittautumistilanne kokonaan?";
 
 		swal({
 		  title: title,
