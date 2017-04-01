@@ -5,7 +5,7 @@ const nextDay = (x) => {
 }
 
 export const nextEvent = () => {
-	var date = new Date(nextDay(Meteor.settings.public.weekday).toDateString());
+  var date = new Date(nextDay(Meteor.settings.public.weekday).toDateString());
   date.setHours(Meteor.settings.public.time);
   return date;
 }

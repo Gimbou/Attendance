@@ -18,36 +18,36 @@ export default class addMember extends Component {
     this.setState({value: event.target.value});
   }
 
-	handleAddMember(event) {
-		event.preventDefault();
+  handleAddMember(event) {
+    event.preventDefault();
 
     const member = this.state.value.trim();
 
     if(member) {
-    	Meteor.call('members.insertMember', member);
+      Meteor.call('members.insertMember', member);
     }
 
     this.setState({value: ''});
-	}
+  }
 
   render() {
     return (
-     	<div className="addMemberContainer">
+      <div className="addMemberContainer">
         <form className="addMember" onSubmit={this.handleAddMember}>
-  	     	<FormGroup>
-  	        <InputGroup>
+          <FormGroup>
+            <InputGroup>
               <FormControl
-    	          type="text"
-    	          placeholder="Uusi pelaaja"
+                type="text"
+                placeholder="Uusi pelaaja"
                 value={this.state.value}
                 onChange={this.handleChange}
                 maxLength="10"
-    	        />
+              />
               <InputGroup.Button>
                 <Button type="submit">Lisää</Button>
               </InputGroup.Button>
             </InputGroup>
-  	      </FormGroup>
+          </FormGroup>
         </form>
       </div>
     );
